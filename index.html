@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="A Recipe for Unbounded Data Augmentation in Visual Reinforcement Learning.">
+  <meta name="keywords" content="SADA, DMC-GB, DMC-GB2, Deepmind Control Suite, DMControl Generalization Benchmark, 
+                                 Image Reinforcement Learning, Reinforcment Learning, Visual Reinforcement Learning, 
+                                 RL, Visual Image Augmentations">
+  <title>A Recipe for Unbounded Data Augmentation in Visual Reinforcement Learning</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="./static/css/dmcgb.css"> 
+
+  <link rel="icon" href="./static/images/stew-icon.png">
+  
+  <script src="./static/js/dmcgb.js"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+<body>
+
+<div style="display: flex; flex-grow: 1; justify-content: center;">
+  <a class="navbar-item" href="https://aalmuzairee.github.io">
+    <span class="icon">
+        <i class="fas fa-home"></i>
+    </span>
+    <!-- &nbsp;  -->
+  </a>
+</div>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">A Recipe for Unbounded Data Augmentation in Visual Reinforcement Learning</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://aalmuzairee.github.io">Abdulaziz Almuzairee</a>,
+            </span>
+            <span class="author-block">
+              <a href="https://nicklashansen.com">Nicklas Hansen</a>,
+            </span>
+            <span class="author-block">
+              <a href="https://hichristensen.com">Henrik I. Christensen</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">UC San Diego</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2405.17416"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2405.17416"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=bNiIM_E-PaE"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/aalmuzairee/dmcgb2"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Method Figure -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="padding-bottom: 0px;">
+      <video src="./static/videos/cinematic.mp4" style="border-radius: 1em;" autoplay muted loop playsinline></video>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            \(Q\)-learning algorithms are appealing for real-world applications due to 
+            their data-efficiency, but they are very prone to overfitting and training 
+            instabilities when trained from visual observations. Prior work, namely <a href="https://www.nicklashansen.com/SVEA/">SVEA</a>, 
+            finds that selective application of data augmentation can improve the visual 
+            generalization of RL agents without destabilizing training. We revisit its 
+            recipe for data augmentation, and find an assumption that limits its effectiveness 
+            to augmentations of a photometric nature. Addressing these limitations, we propose 
+            a generalized recipe, <b><strong>SADA</strong></b>, that works with wider varieties of augmentations. We benchmark 
+            its effectiveness on DMC-GB2 -- our proposed extension of the popular DMControl 
+            Generalization Benchmark  -- as well as tasks from Meta-World and the Distracting 
+            Control Suite, and find that our method, <strong>SADA</strong>, greatly improves training stability and 
+            generalization of RL agents across a diverse set of augmentations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- DMCGB-2 Window -->
+<section class="hero is-light is-small">
+  <div class="container has-text-centered is-max-desktop">
+      <div class="hero-body">
+        <h2 class="title is-3" style="padding: 3%;">DeepMind Control - Generalization Benchmark 2 (DMC-GB2)</h2>
+        <div class="tab-container">
+          <div class="tab-header" id="dmc-tabs">
+            <button class="tab active" onclick="switchTabDMC(1)">Walker Walk</button>
+            <button class="tab" onclick="switchTabDMC(2)">Walker Stand</button>
+            <button class="tab" onclick="switchTabDMC(3)">Cheetah Run</button>
+            <button class="tab" onclick="switchTabDMC(4)">Finger Spin</button>
+            <button class="tab" onclick="switchTabDMC(5)">Cartpole Swingup</button>
+            <button class="tab" onclick="switchTabDMC(6)">Cup Catch</button>
+          </div>
+          <div class="tab-content" id="dmc-vids">
+            <div class="tab-pane active" id="tab-1">
+              <div class="tab-pane-inner">
+                <div class="tab-pane-sidebar-1" style="width: 15%">
+                  <div class="tab-pane-sidebar-1-top"></div>
+                  <div class="tab-pane-sidebar-1-mid">
+                    <h2 class="title set-title">Train</h2>
+                    <div class="tab-video-row">
+                      <div class="video-container" style="padding:7%">
+                        <h2 class="video-title">Original</h2>
+                        <video src="./static/videos/sada_mix/walk/t.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane-sidebar-1-bottom"></div>
+                </div>
+                <div class="tab-pane-sidebar-2" style="width: 10%">
+                  <img src="./static/images/arrow.png" style="width:70%" ></img>
+                </div>
+                <div class="tab-pane-content" style="width: 75%">
+                  <div class="tab-pane-top">
+                    <h2 class="title set-title">Geometric Test Set</h2>
+                    <div class="tab-video-row">
+                      <div class="video-container">
+                        <h2 class="video-title">Rotate Easy</h2>
+                        <video src="./static/videos/sada_mix/walk/re.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                      <div class="video-container">
+                        <h2 class="video-title">Rotate Hard</h2>
+                        <video src="./static/videos/sada_mix/walk/rh.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                      <div class="video-container">
+                        <h2 class="video-title">Shift Easy</h2>
+                        <video src="./static/videos/sada_mix/walk/se.mp4" autoplay muted loop playsinline></video>
+                      </div>                  
+                      <div class="video-container">
+                        <h2 class="video-title">Shift Hard</h2>
+                        <video src="./static/videos/sada_mix/walk/sh.mp4" autoplay muted loop playsinline></video>
+                      </div>                   
+                      <div class="video-container">
+                        <h2 class="video-title">Rotate Shift Easy</h2>
+                        <video src="./static/videos/sada_mix/walk/rse.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                      <div class="video-container">
+                        <h2 class="video-title">Rotate Shift Hard</h2>
+                        <video src="./static/videos/sada_mix/walk/rsh.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane-mid">&nbsp;</div>
+                  <div class="tab-pane-bottom">
+                    <h2 class="title set-title">Photometric Test Set</h2>
+                    <div class="tab-video-row">
+                      <div class="video-container">
+                        <h2 class="video-title">Color Easy</h2>
+                        <video src="./static/videos/sada_mix/walk/ce.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                      <div class="video-container">
+                        <h2 class="video-title">Color Hard</h2>
+                        <video src="./static/videos/sada_mix/walk/ch.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                      <div class="video-container">
+                        <h2 class="video-title">Video Easy</h2>
+                        <video src="./static/videos/sada_mix/walk/ve.mp4" autoplay muted loop playsinline></video>
+                      </div>                  
+                      <div class="video-container">
+                        <h2 class="video-title">Video Hard</h2>
+                        <video src="./static/videos/sada_mix/walk/vh.mp4" autoplay muted loop playsinline></video>
+                      </div>                   
+                      <div class="video-container">
+                        <h2 class="video-title">Color Video Easy</h2>
+                        <video src="./static/videos/sada_mix/walk/cve.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                      <div class="video-container">
+                        <h2 class="video-title">Color Video Hard</h2>
+                        <video src="./static/videos/sada_mix/walk/cvh.mp4" autoplay muted loop playsinline></video>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+
+<!-- Method -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+            Naive augmentation, where all inputs are indiscriminately augmented, has been shown 
+            to destabilize policies or lead to suboptimal convergence. To stabilize 
+            actor-critic learning under strong applications of data augmentation, our method, <strong>SADA</strong>, selectively 
+            applies augmentations to inputs in both the actor and critic updates. 
+            Given an input observation \(\mathbf{o}_t\), augmented input observation \(\text{aug(}\mathbf{o}_{t}\text{)}=\mathbf{o}_{t}^\text{aug}\), replay buffer \(\mathcal{D}\), and an encoder \(f_\xi\), the actor and critic objectives 
+            for a generic actor-critic method thus becomes:
+            
+            $$    \mathcal{L}_{\pi_\phi}^\textbf{SADA}(\mathcal{D}) = \mathbb{E}_{\mathbf{o}_{t} \sim \mathcal{D}} \left[ -Q_\theta(\mathbf{m}_t, \pi_\phi(\mathbf{p}_t)) 
+                \right]~~~~~~~~\textcolor{gray}{\textrm{(actor)}} \\ $$
+            $$    \mathcal{L}^\textbf{SADA}_{Q_{\theta}}(\mathcal{D}) = \mathbb{E}_{(\mathbf{o}_{t},\mathbf{a}_{t}, r_{t}, \mathbf{o}_{t+1})\sim\mathcal{D}} 
+              \left[ \| Q_\theta(\mathbf{p}_{t}, \mathbf{a}_{t}) - \mathbf{y}_{t} \|_{2} \right]~~~\textcolor{gray}{\textrm{(critic)}} \\ $$
+            
+            where \(\mathbf{p}_t = f_\xi(\left[\mathbf{o}_{t}, \mathbf{o}_{t}^\text{aug}\right]_N), ~~ \mathbf{m}_t = f_\xi(\left[\mathbf{o}_{t}, \mathbf{o}_{t}\right]_N)\), 
+            and \(\mathbf{y}_t = \left[ q_t^{tgt},q_t^{tgt}\right]_{N}\). 
+            We use \([\cdot]_N\) to denote concatenation for batch size of dimensionality \(N\) where \(\mathbf{o}_t, \mathbf{o}_t^\text{aug} \in \mathbb{R}^{N\times C\times H\times W}\).  
+            In \(\mathbf{y}_t\), we use \(q_t^{tgt}\) to denote the target \(Q\)-value, predicted entirely from unaugmented data using the target \(Q\)-function
+            such that its equation becomes:
+            \(q_t^{tgt} = r(\mathbf{o}_t, \mathbf{a_t}) + \gamma \text{max}_{\mathbf{a'_t}} Q_{\overline{\theta}}(f_\xi(\mathbf{o}_{t+1}),\mathbf{a'})\). Most importantly, 
+            <strong>SADA</strong> requires no additional forward passes, losses, or parameters.        
+        </div>
+        <div style="padding-top: 2%; padding-bottom: 2%;">
+          <img width="100%" src="./static/images/model_diag.png">
+          <div class="has-text-justified" style="padding-top: 3%;">
+            <strong>Method Diagram.</strong> Generic Actor-Critic Algorithm Update. Our proposed changes (<strong>SADA</strong>) when applying strong data augmentation are highlighted in yellow.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Augmentations. -->
+<section class="hero is-light is-small">
+  <div class="hero-body container has-text-centered is-max-desktop" style="padding-bottom: 3rem;">
+    <h2 class="title is-3" style="padding: 3% 0 0 0; margin-bottom: 0;">Image Augmentations</h2>
+    <div class="aug-container">
+      <div class="aug-train-pane">
+        <h2 class="title set-title" style="margin-bottom: 1em;">Train</h2>
+        <div class="tab-video-row">
+          <div class="video-container">
+            <h2 class="video-title" style="padding-top: 5%;">Unaugmented</h2>
+            <img src="./static/images/augs/cheetah_train.png"/>
+          </div>
+        </div>
+      </div>
+      <div class="aug-spacing"></div>
+      <div class="aug-set-pane">
+        <h2 class="title set-title" style="margin-bottom: 1em;">Geometric Augmentations</h2>
+        <div class="tab-video-row">
+          <div class="video-container">
+            <h2 class="video-title">Random Rotate</h2>
+            <img src="./static/images/augs/cheetah_rotate.png"/>
+          </div>
+          <div class="video-container">
+            <h2 class="video-title">Random Shift</h2>
+            <img src="./static/images/augs/cheetah_shift.png"/>
+          </div>
+          <div class="video-container">
+            <h2 class="video-title">Random Rotate and Shift</h2>
+            <img src="./static/images/augs/cheetah_rotateandshift.png"/>
+          </div>                  
+        </div>
+      </div>
+      <div class="aug-spacing"></div>
+      <div class="aug-set-pane">
+        <h2 class="title set-title" style="margin-bottom: 1em;">Photometric Augmentations</h2>
+        <div class="tab-video-row">
+          <div class="video-container">
+            <h2 class="video-title">Random Convolution</h2>
+            <img src="./static/images/augs/cheetah_conv.png"/>
+          </div>
+          <div class="video-container">
+            <h2 class="video-title">Random Overlay</h2>
+            <img src="./static/images/augs/cheetah_over.png"/>
+          </div>
+          <div class="video-container">
+            <h2 class="video-title">Random Convolution and Overlay</h2>
+            <img src="./static/images/augs/cheetah_convandover.png"/>
+          </div>                  
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  -->
+</section>
+
+
+<!-- Overall Robustness -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Overall Robustness</h2>
+        <div class="has-text-justified">
+          <img src="./static/images/robustness.png"/>
+          <strong>DMC-GB2 Overall Robustness.</strong> Episode reward on DMC-GB2 when trained under all (geometric and photometric) augmentations, averaged across all 6 DMControl tasks. Mean and 95% CI over 5 seeds.
+          Our method, <strong>SADA</strong>, displays superior robustness to diverse image transformation types, all while attaining a similar sample efficiency to its unaugmented
+          DrQ baseline in the training environment.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Metaworld Pane. -->
+<section class="hero is-light is-small">
+  <div class="hero-body container has-text-centered is-max-desktop">
+      <h2 class="title is-3" style="padding: 3%;"> Meta-World Visuals</h2>
+      <div class="tab-container">
+        <div class="tab-header" id="mw-tabs">
+          <button class="tab active" onclick="switchTabMW(1)">Door Open</button>
+          <button class="tab" onclick="switchTabMW(2)">Peg Unplug Side</button>
+          <button class="tab" onclick="switchTabMW(3)">Sweep Into</button>
+          <button class="tab" onclick="switchTabMW(4)">Basketball</button>
+          <button class="tab" onclick="switchTabMW(5)">Push</button>
+        </div>
+        <div class="tab-content" id="mw-vids" style="padding: 5%;">
+          <div class="tab-pane active">
+            <div class="tab-pane-inner">
+              <div class="tab-pane-content" style="width: 42%;">
+                <div class="aug-set-pane">
+                  <h2 class="title set-title" style="padding-top: 10%;" >Train</h2>
+                  <div class="tab-video-row">
+                    <div class="video-container">
+                      <h2 class="video-title">Original</h2>
+                      <video src="./static/videos/sada_mix/door/t.mp4" style="padding: 10%; width: 100%;" autoplay muted loop playsinline></video>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane-sidebar-2" style="width: 16%">
+                <img src="./static/images/arrow.png" style="width:70%" ></img>
+              </div>
+              <div class="tab-pane-content" style="width: 42%">
+                <div class="aug-set-pane">
+                  <h2 class="title set-title" style="padding-top: 10%;">Geometric Test Set</h2>
+                  <div class="tab-video-row">             
+                    <div class="video-container">
+                      <h2 class="video-title">Shift Hard</h2>
+                      <video src="./static/videos/sada_mix/door/sh.mp4" style="padding: 10%; width: 100%;" autoplay muted loop playsinline></video>
+                    </div>                   
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- Video. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="content has-text-justified" style="display: flex;">
+          <embed style="margin: auto; padding-top: 2%;" width="784" height="442" src="https://www.youtube.com/embed/bNiIM_E-PaE" frameborder="0"></embed> 
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@misc{almuzairee2024recipe,
+      title={A Recipe for Unbounded Data Augmentation in Visual Reinforcement Learning}, 
+      author={Abdulaziz Almuzairee and Nicklas Hansen and Henrik I. Christensen},
+      year={2024},
+      eprint={2405.17416},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8 has-text-centered">
+        <div class="content">
+          <p>
+            Website template based off <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
